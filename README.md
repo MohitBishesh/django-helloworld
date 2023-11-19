@@ -1,1 +1,1 @@
-# django-helloworld
+This is my readme file for the assignment.
