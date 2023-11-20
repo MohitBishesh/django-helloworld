@@ -1,0 +1,56 @@
+# Playbook for setting up Docker Swarm on manager and worker nodes
+
+# First play for the manager node
+- hosts: masterserver
+  become: true  # Use elevated privileges
+
+  tasks:
+    # Install Docker on the manager node
+    - name: Install Docker on the manager
+      apt:
+        name: docker.io
+        state: present  # Use 'present' for the latest stable version
+      become: true
+
+    # Check if Docker Swarm is already initialized on the manager
+    - name: Check if Docker Swarm is already initialized
+      shell: "docker info --format '{{ '{{' }}.Swarm.LocalNodeState{{ '}}' }}'"
+      register: swarm_status
+      ignore_errors: true
+
+    # Initialize Docker Swarm on the manager if it's not already active
+    - name: Initialize Docker Swarm on the manager
+      command: docker swarm init
+      when: "'inactive' not in swarm_status.stdout|default('')"
+      become: true
+
+    # Retrieve and store the manager token for worker nodes to join
+    - name: Get manager token
+      shell: docker swarm join-token -q manager
+      register: manager_token
+      when: "'inactive' not in swarm_status.stdout|default('')"
+      become: true
+
+    # Store the manager IP address for worker nodes to use
+    - name: Get manager IP
+      set_fact:
+        manager_ip: "{{ ansible_host }}"
+
+# Second play for the worker nodes
+- hosts: workerserver
+  become: true
+
+  tasks:
+    # Install Docker on the worker nodes
+    - name: Install Docker on the worker
+      apt:
+        name: docker.io
+        state: present  # Use 'present' for the latest stable version
+      become: true
+
+    # Join the Docker Swarm as a Worker
+    # This task will always attempt to run. If the swarm is not initialized on the manager, this task will fail.
+    - name: Join Docker Swarm as Worker
+      shell: |
+        docker swarm join --token {{ hostvars['masterserver'].manager_token.stdout }} {{ hostvars['masterserver'].manager_ip }}:2377
+      become: true
