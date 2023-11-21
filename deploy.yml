@@ -1,0 +1,11 @@
+---
+- name: Deploy Python Flask App
+  hosts: masterserver
+  become: yes
+
+  tasks:
+    - name: Remove existing service (if any)
+      command: "docker service rm python-flask-app || true"
+
+    - name: Create Docker service
+      command: "docker service create --name python-flask-app -p 3000:3000 --replicas 2 mohitbishesh/python-flask-app:{{ build_number }}"
