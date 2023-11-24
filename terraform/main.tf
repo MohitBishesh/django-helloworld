@@ -25,7 +25,7 @@ resource "aws_instance" "manager_instance" {
   security_groups = [aws_security_group.allow_my_ssh2.id]
 
   tags = {
-    Name = "Manager-node(with terraform)"
+    Name = "Manager-node (with Terraform)"
   }
 }
 
@@ -37,7 +37,7 @@ resource "aws_instance" "worker_instance1" {
   security_groups = [aws_security_group.allow_my_ssh2.id]
 
   tags = {
-    Name = "Worker-node1 (with terraform)"
+    Name = "Worker-node1 (with Terraform)"
   }
 }
 
@@ -49,6 +49,6 @@ resource "aws_instance" "worker_instance2" {
   security_groups = [aws_security_group.allow_my_ssh2.id]
 
   tags = {
-    Name = "Worker-node2 (with terraform)"
+    Name = "Worker-node2 (with Terraform)"
   }
 }
