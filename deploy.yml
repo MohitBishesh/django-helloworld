@@ -1,21 +1,15 @@
-# ---
-# - name: Deploy Python Flask App
-#   hosts: masterserver
-#   become: yes
-
-#   tasks:
-#     - name: Remove existing service (if any)
-#       command: "docker service rm python-flask-app || true"
-#       ignore_errors: yes
-
-#     - name: Create Docker service
-#       command: "docker service create --name python-flask-app -p 3000:3000 --replicas 2 mohitbishesh/python-flask-app:{{ build_number }}"
 ---
 - name: Deploy Python Flask App Stack
-  hosts: 3.208.13.74
+  hosts: 3.208.13.74  # Swarm manager node
   become: yes
 
   tasks:
+    - name: Copy docker-compose.yml to swarm manager node
+      copy:
+        src: /var/lib/jenkins/workspace/assignment-1/docker-compose.yml
+        dest: /var/lib/jenkins/workspace/assignment-1/docker-compose.yml
+        remote_src: yes
+
     - name: Remove existing stack (if any)
       command: "docker stack rm python-flask-stack || true"
 
