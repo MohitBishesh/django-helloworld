@@ -14,4 +14,4 @@
       command: "docker stack rm python-flask-stack || true"
 
     - name: Deploy Docker stack
-      command: "docker stack deploy --compose-file /var/lib/jenkins/workspace/assignment-1/docker-compose.yml python-flask-stack"
+      command: "docker stack deploy -c /var/lib/jenkins/workspace/assignment-1/docker-compose.yml python-flask-stack"
