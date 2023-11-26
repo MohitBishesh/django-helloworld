@@ -12,7 +12,7 @@
 #       command: "docker service create --name python-flask-app -p 3000:3000 --replicas 2 mohitbishesh/python-flask-app:{{ build_number }}"
 ---
 - name: Deploy Python Flask App Stack
-  hosts: masterserver
+  hosts: 3.208.13.74
   become: yes
 
   tasks:
