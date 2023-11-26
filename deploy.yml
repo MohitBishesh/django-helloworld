@@ -1,17 +1,11 @@
 ---
 - name: Deploy Python Flask App Stack
-  hosts: 3.208.13.74
+  hosts: 3.208.13.74  # Use the IP address of your swarm manager node
   become: yes
 
   tasks:
-    - name: Copy docker-compose.yml to swarm manager node
-      copy:
-        src: /var/lib/jenkins/workspace/assignment-1/docker-compose.yml
-        dest: /var/lib/jenkins/workspace/assignment-1/docker-compose.yml
-        remote_src: yes  # Use remote_src to indicate that the source file is on the local machine
-
     - name: Remove existing stack (if any)
       command: "docker stack rm python-flask-stack || true"
 
     - name: Deploy Docker stack
-      command: "docker stack deploy -c /var/lib/jenkins/workspace/assignment-1/docker-compose.yml python-flask-stack"
+      command: "docker stack deploy -c docker-compose.yml python-flask-stack"
